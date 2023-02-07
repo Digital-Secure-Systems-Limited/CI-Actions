@@ -33,6 +33,11 @@ on:
         description: 'path to project and dockerfile'
         required: true
         type: string
+      skip-version:  
+        description: 'do not try and replace the version number in .NET projects'
+        required: false
+        type: boolean
+        default: false
         
 jobs:
   build:
@@ -85,12 +90,15 @@ jobs:
             type=raw,value=latest,enable=false
             
       - name: Set version number
+        if: inputs.skip-version == false
         run: sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.meta.outputs.version }}<\/Version>/' ${{ inputs.projectPath }}/*.csproj
 
       - name: add private GitHub registry to NuGet
+        if: inputs.skip-version == false
         run: dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --configfile ./nuget.config --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
 
       - name: add nuget feed
+        if: inputs.skip-version == false
         run: dotnet nuget add source https://api.nuget.org/v3/index.json --configfile ./nuget.config --name nuget_pipeline
         
       # Build and push Docker image with Buildx (don't push on PR)
