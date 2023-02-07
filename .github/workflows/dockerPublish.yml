@@ -38,6 +38,11 @@ on:
         required: false
         type: boolean
         default: false
+      dockerfile:  
+        description: 'name of the dockerfile'
+        required: false
+        type: string
+        default: Dockerfile
         
 jobs:
   build:
@@ -108,7 +113,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ${{ inputs.projectPath }}/Dockerfile
+          file: ${{ inputs.projectPath }}/${{ inputs.dockerfile }}
           push: ${{ inputs.event-name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
