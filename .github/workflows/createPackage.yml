@@ -73,7 +73,7 @@ jobs:
       - name: Copy files for cache
         run: |
           mkdir -p ${{ github.workspace }}/cache
-          find . -type f -name "*.nupkg" -exec cp {} ${{ github.workspace }}/cache \;
+          find . -type f -name "*.*nupkg" -exec cp {} ${{ github.workspace }}/cache \;
           cp nuget.config ${{ github.workspace }}/cache
           
       - name: Cache
@@ -99,4 +99,4 @@ jobs:
          key: ${{ inputs.ref-cache-key }}    
           
      - name: Publish
-       run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate -n
+       run: dotnet nuget push "**/*.*nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate -n
