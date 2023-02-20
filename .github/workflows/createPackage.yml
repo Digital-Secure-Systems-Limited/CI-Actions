@@ -60,7 +60,7 @@ jobs:
         run: dotnet build --no-restore
                
       - name: Create package
-        run: dotnet pack --include-symbols -p:SymbolPackageFormat=snupkg --configuration Release
+        run: dotnet pack -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg --configuration Release
          
       - name: Delete release packages
         uses: Digital-Secure-Systems-Limited/CI-Actions-DeleteRepoPackageVersion@main
