@@ -69,36 +69,10 @@ jobs:
           package-token: ${{ secrets.DSSL_TOKEN }}
           package-version: ${{ github.ref_name }}
           package-names: ${{ steps.packagenames.outputs.package_names }}
-
-      - name: Copy files for cache
+          
+      - name: Publish
         run: |
-          mkdir -p ${{ github.workspace }}/cache
-          find . -type f -name "*.nupkg" -exec cp {} ${{ github.workspace }}/cache \;
-          find . -type f -name "*.snupkg" -exec cp {} ${{ github.workspace }}/cache \;
-          cp nuget.config ${{ github.workspace }}/cache
-          
-      - name: Cache
-        uses: actions/cache@v3        
-        with:        
-         path: ${{ github.workspace }}/cache
-         key: ${{ inputs.ref-cache-key }}      
+         dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate
+
+   
         
-  publish:
-    runs-on: ubuntu-latest
-    needs: create
-    steps:   
-    
-     - name: Setup .NET
-       uses: actions/setup-dotnet@v3
-       with:
-         dotnet-version: 6.0.x
-         
-     - name: Restore
-       uses: actions/cache@v3
-       with:
-         path: ${{ github.workspace }}/cache
-         key: ${{ inputs.ref-cache-key }}    
-          
-     - name: Publish
-       run: |
-         dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate -n
