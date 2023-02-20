@@ -60,7 +60,7 @@ jobs:
         run: dotnet build --no-restore
                
       - name: Create package
-        run: dotnet pack --configuration Release
+        run: dotnet pack --include-symbols -p:SymbolPackageFormat=snupkg --configuration Release
          
       - name: Delete release packages
         uses: Digital-Secure-Systems-Limited/CI-Actions-DeleteRepoPackageVersion@main
@@ -101,4 +101,4 @@ jobs:
           
      - name: Publish
        run: |
-         dotnet nuget push "**/*.nupkg" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate -n
+         dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate -n
