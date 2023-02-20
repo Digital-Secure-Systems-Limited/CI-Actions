@@ -70,10 +70,11 @@ jobs:
           package-version: ${{ github.ref_name }}
           package-names: ${{ steps.packagenames.outputs.package_names }}
           
-      - name: Publish
-        run: |
-         dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate
-         dotnet nuget push "**/*.snupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate
+      - name: Publish package
+        run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate
+      
+      - name: Publish debug package
+        run: dotnet nuget push "**/*.snupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --skip-duplicate
 
 
    
