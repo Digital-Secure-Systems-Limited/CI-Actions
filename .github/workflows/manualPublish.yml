@@ -41,7 +41,7 @@ jobs:
       - name: Set version number
         run: |
           sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' src/${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
-          sed -i 's/<AssemblyVersion>\(.*\)<\/AssemblyVersion>/<AssemblyVersion>${{ steps.version.outputs.full_without_prefix }}<\/AssemblyVersion>/' src/${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
+          sed -i 's/<AssemblyVersion>\(.*\)<\/AssemblyVersion>/<AssemblyVersion>${{ steps.version.outputs.major_without_prefix }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}<\/AssemblyVersion>/' src/${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
           sed -i 's/<FileVersion>\(.*\)<\/FileVersion>/<FileVersion>${{ steps.version.outputs.full_without_prefix }}<\/FileVersion>/' src/${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
               
       - name: Build
