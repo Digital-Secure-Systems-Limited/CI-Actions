@@ -39,7 +39,10 @@ jobs:
         run: dotnet nuget add source https://api.nuget.org/v3/index.json --configfile ./nuget.config --name nuget_pipeline
       
       - name: Set version number
-        run: sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' src/${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
+        run: |
+          sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' src/${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
+          sed -i 's/<AssemblyVersion>\(.*\)<\/AssemblyVersion>/<AssemblyVersion>${{ steps.version.outputs.full_without_prefix }}<\/AssemblyVersion>/' src/${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
+          sed -i 's/<FileVersion>\(.*\)<\/FileVersion>/<FileVersion>${{ steps.version.outputs.full_without_prefix }}<\/FileVersion>/' src/${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
               
       - name: Build
         run:  dotnet publish src/${{ inputs.project-name }}/${{ inputs.project-name }}.csproj --output ./output --verbosity q -c Release --self-contained true --runtime win-x64
