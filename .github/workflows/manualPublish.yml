@@ -55,7 +55,7 @@ jobs:
 
       - name: Upload to live
         uses: BetaHuhn/do-spaces-action@v2
-        if: ${{ steps.version.outputs.is_stable == true }}
+        if: steps.version.outputs.is_stable == 'true'
         with:
           access_key: ${{ secrets.DO_ACCESS_KEY}}
           secret_key: ${{ secrets.DO_SECRET_KEY }}
@@ -66,7 +66,7 @@ jobs:
       
       - name: Upload to beta
         uses: BetaHuhn/do-spaces-action@v2
-        if: ${{ steps.version.outputs.is_stable == false }}
+        if: steps.version.outputs.is_stable == 'false'
         with:
           access_key: ${{ secrets.DO_ACCESS_KEY}}
           secret_key: ${{ secrets.DO_SECRET_KEY }}
