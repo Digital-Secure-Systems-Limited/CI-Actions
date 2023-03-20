@@ -62,7 +62,9 @@ jobs:
           root_dir: src/_build
           file_path: ${{ inputs.zip-name }}.zip
           
-      - uses: BetaHuhn/do-spaces-action@v2
+      - name: Upload to live
+        uses: BetaHuhn/do-spaces-action@v2
+        if: ${{ steps.version.outputs.is_stable == true }}
         with:
           access_key: ${{ secrets.DO_ACCESS_KEY}}
           secret_key: ${{ secrets.DO_SECRET_KEY }}
@@ -70,3 +72,15 @@ jobs:
           space_region: ${{ secrets.DO_SPACE_REGION }}
           source: ${{ inputs.zip-name }}.zip
           out_dir: dc-web/${{ steps.version.outputs.full_without_prefix }}
+      
+      - name: Upload to beta
+        uses: BetaHuhn/do-spaces-action@v2
+        if: ${{ steps.version.outputs.is_stable == false }}
+        with:
+          access_key: ${{ secrets.DO_ACCESS_KEY}}
+          secret_key: ${{ secrets.DO_SECRET_KEY }}
+          space_name: ${{ secrets.DO_SPACE_NAME }}
+          space_region: ${{ secrets.DO_SPACE_REGION }}
+          source: ${{ inputs.zip-name }}.zip
+          out_dir: dc-web-beta/${{ steps.version.outputs.full_without_prefix }}
+
