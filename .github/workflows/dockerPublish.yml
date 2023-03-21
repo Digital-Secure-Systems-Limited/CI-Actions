@@ -59,6 +59,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - uses: nowsprinting/check-version-format-action@v3
+        id: version
+        with:
+          prefix: 'v'
+
+      - name: Set live docker details
+        if: steps.version.outputs.is_stable == 'true'
+        run: |
+          echo "DOCKER_REGISTRY=registry.digitalocean.com" >> $GITHUB_ENV
+          echo "DOCKER_USER=${{ secrets.DO_DOCKER_USERNAME }}" >> $GITHUB_ENV
+          echo "DOCKER_PASSWORD=${{ secrets.DO_DOCKER_PASSWORD }}" >> $GITHUB_ENV
+          
+      - name: Set beta docker details
+        if: steps.version.outputs.is_stable == 'false'
+        run: |
+          echo "DOCKER_REGISTRY=ghcr.io" >> $GITHUB_ENV
+          echo "DOCKER_USER=${{ secrets.DSSL_USERNAME }}" >> $GITHUB_ENV
+          echo "DOCKER_PASSWORD=${{ secrets.DSSL_DOCKER }}" >> $GITHUB_ENV
+
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
@@ -78,9 +98,9 @@ jobs:
         if: inputs.event-name != 'pull_request'
         uses: docker/login-action@v2
         with:
-          registry: ${{ inputs.registry }}
-          username: ${{ secrets.DSSL_USERNAME }}
-          password: ${{ secrets.DSSL_DOCKER }}
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -88,7 +108,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ inputs.registry }}/${{ inputs.image-name }}          
+          images: ${{ env.DOCKER_REGISTRY }}/${{ inputs.image-name }}          
           tags: |
             #type=ref,event=branch,suffix=-beta
             type=semver,pattern={{version}}
