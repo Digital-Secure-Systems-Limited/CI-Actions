@@ -108,7 +108,6 @@ jobs:
           tags: |
             #type=ref,event=branch,suffix=-beta
             type=semver,pattern={{version}}
-            type=raw,value=latest,enable=false
             
       - name: Set version number
         if: inputs.skip-version == false
@@ -133,8 +132,8 @@ jobs:
           push: ${{ inputs.event-name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=user/app:buildcache
+          cache-to: type=registry,ref=user/app:buildcache,mode=max
           build-args: VERSION=${{ steps.meta.outputs.version }}
 
 
