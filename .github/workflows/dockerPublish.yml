@@ -111,6 +111,7 @@ jobs:
           tags: |
             #type=ref,event=branch,suffix=-beta
             type=semver,pattern={{version}}
+            type=raw,value=latest,enable=false
             
       - name: Set version number
         if: inputs.skip-version == false
