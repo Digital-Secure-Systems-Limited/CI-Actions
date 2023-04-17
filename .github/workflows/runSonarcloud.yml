@@ -38,7 +38,7 @@ jobs:
         dotnetBuildArguments: ${{ inputs.projectFile }}
         dotnetPreBuildCmd: |
           curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash - &&\
-          sudo apt-get install -y nodejs
+          apt-get install -y nodejs
           dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --configfile ./nuget.config --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
         dotnetTestArguments: ${{ inputs.projectFile }} --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
