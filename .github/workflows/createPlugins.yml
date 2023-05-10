@@ -38,13 +38,16 @@ jobs:
       run: |
         dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
          
+    - name: Restore Solution
+      run: dotnet restore
+        
     - name: Find csproj file and publish them
       run: |
         csproj=$(find src/plugins -iname "DSSL.Module.${{ inputs.plugin_type }}.${{ inputs.plugin_name }}.csproj")
         project_name=$(basename "$csproj" .csproj)
         mkdir -p "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         mkdir -p "output/${{ inputs.plugin_name }}"
-        dotnet publish "$csproj" -o "output/${{ inputs.plugin_name }}"
+        dotnet publish --no-release "$csproj" -o "output/${{ inputs.plugin_name }}"
         mv -n output/${{ inputs.plugin_name }}.dll "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         IFS=',' read -ra files <<< "${{ inputs.additional_files }}"
         for file in "${files[@]}"; do
