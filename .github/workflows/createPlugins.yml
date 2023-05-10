@@ -36,13 +36,12 @@ jobs:
           
     - name: Add Sources to NuGet
       run: |
-         dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
+        dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --configfile ./nuget.config --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
+        dotnet nuget add source https://api.nuget.org/v3/index.json --configfile ./nuget.config --name nuget_pipeline
          
     - name: Find csproj file and publish them
       run: |
-        ls -R
         csproj=$(find src/plugins -iname "DSSL.Module.${{ inputs.plugin_type }}.${{ inputs.plugin_name }}.csproj")
-        echo "Project file path: $csproj"
         project_name=$(basename "$csproj" .csproj)
         mkdir -p "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         mkdir -p "output/${{ inputs.plugin_name }}"
