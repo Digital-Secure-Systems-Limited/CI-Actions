@@ -37,13 +37,11 @@ jobs:
     - name: Add Sources to NuGet
       run: |
         dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
-         
-    - name: Restore Solution
-      run: dotnet restore
-        
+                 
     - name: Find csproj file and publish them
       run: |
         csproj=$(find src/plugins -iname "DSSL.Module.${{ inputs.plugin_type }}.${{ inputs.plugin_name }}.csproj")
+        dotnet restore $csproj
         project_name=$(basename "$csproj" .csproj)
         mkdir -p "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         mkdir -p "output/${{ inputs.plugin_name }}"
