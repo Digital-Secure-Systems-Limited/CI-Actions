@@ -38,7 +38,6 @@ jobs:
           
     - name: Restore dependencies
       run: |
-          ls -R
           dotnet restore --no-cache --force DSSL.Module.${{ inputs.plugin_type }}.sln
             
     - name: Find csproj file and publish them
