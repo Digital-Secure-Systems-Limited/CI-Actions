@@ -39,7 +39,8 @@ jobs:
     - name: Restore dependencies
       run: |
           sln=$(find -iname "DSSL.Module.${{ inputs.plugin_type }}.sln")
-          dotnet restore --no-cache --force "$sln"
+          echo "Solution file: $sln"
+          dotnet restore --no-cache --force $sln
             
     - name: Find csproj file and publish them
       run: |
