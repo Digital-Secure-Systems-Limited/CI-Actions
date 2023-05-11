@@ -37,7 +37,9 @@ jobs:
         dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
           
     - name: Restore dependencies
-      run: dotnet restore --no-cache --force ./DSSL.Module.${{ inputs.plugin_type }}.sln
+      run: |
+          ls -R
+          dotnet restore --no-cache --force DSSL.Module.${{ inputs.plugin_type }}.sln
             
     - name: Find csproj file and publish them
       run: |
