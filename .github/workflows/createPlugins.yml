@@ -17,8 +17,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NUGET_CONFIG_PATH: ./nuget.config
     steps:
     - uses: nowsprinting/check-version-format-action@v3
       id: version
