@@ -35,7 +35,10 @@ jobs:
     - name: Add Sources to NuGet
       run: |
         dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
-                      
+     
+    - name: Set version number
+      run: sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' ${{ github.workspace }}/src/*/*.csproj         
+
     - name: Find csproj file and publish them
       run: |
         csproj=$(find src/plugins -iname "DSSL.Module.${{ inputs.plugin_type }}.${{ inputs.plugin_name }}.csproj")
@@ -74,4 +77,3 @@ jobs:
         space_region: ${{ secrets.DO_SPACE_REGION }}
         source: ${{ inputs.plugin_name }}.zip
         out_dir: dc-web-beta/${{ steps.version.outputs.full_without_prefix }}/plugins/${{ inputs.plugin_type }}
-  
