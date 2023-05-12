@@ -51,9 +51,7 @@ jobs:
         done
         
     - name: Create zip file
-      run: |
-          cd ${{ inputs.plugin_type }}/${{ inputs.plugin_name }}
-          zip -r ${{ inputs.plugin_name }}.zip *
+      run: zip -r ${{ inputs.plugin_name }}.zip ${{ inputs.plugin_type }}/*
       
     - name: Upload to live
       uses: BetaHuhn/do-spaces-action@v2
