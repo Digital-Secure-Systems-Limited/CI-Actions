@@ -47,7 +47,7 @@ jobs:
         mv -n output/${{ inputs.plugin_name }}/DSSL.Module.${{ inputs.plugin_type }}.${{ inputs.plugin_name }}.dll "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         IFS=',' read -ra files <<< "${{ inputs.additional_files }}"
         for file in "${files[@]}"; do
-            mv output/${{ inputs.plugin_name }} "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
+            mv output/$file.dll "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         done
         
     - name: Create zip file
