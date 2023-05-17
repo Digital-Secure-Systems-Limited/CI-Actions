@@ -38,7 +38,7 @@ jobs:
        
     - name: Find csproj file and publish them
       run: |
-        csproj=$(find src/plugins -iname "DSSL.Module.${{ inputs.plugin_type }}.${{ inputs.plugin_name }}.csproj")
+        csproj=$(find src/plugins -iname "*${{ inputs.plugin_name }}.csproj")
         sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' $csproj
         project_name=$(basename "$csproj" .csproj)
         mkdir -p "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
