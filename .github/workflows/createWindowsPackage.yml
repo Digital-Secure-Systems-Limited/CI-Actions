@@ -36,9 +36,6 @@ jobs:
       
       - name: Navigate to Workspace
         run: cd ${{ github.workspace }}
-
-      - name: Create Build Directory
-        run: mkdir _build
                   
       - name: Restore Packages
         run: nuget restore ${{ inputs.solution-name }}.sln
