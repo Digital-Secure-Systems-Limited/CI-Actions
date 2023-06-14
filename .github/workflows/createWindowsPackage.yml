@@ -11,7 +11,7 @@ on:
         required: true
         type: string   
       package-name:  
-        description: 'npkg name'
+        description: 'nupkg name'
         required: true
         type: string       
 jobs:
