@@ -48,7 +48,7 @@ jobs:
         run:  msbuild ${{ inputs.solution-name }}.sln /nologo /nr:false /p:platform="Any CPU" /p:configuration="Release" /p:Version="${{ steps.version.outputs.full_without_prefix }}" -m
         
       - name: Pack
-        run: nuget pack ${{ inputs.project-name }}.vbproj -Version ${{ steps.version.outputs.full_without_prefix }} -Properties Configuration=Release
+        run: nuget pack "${{ inputs.project-name }}.*proj" -Version ${{ steps.version.outputs.full_without_prefix }} -Properties Configuration=Release
         
       - name: Publish
         run: nuget push "**/${{ inputs.project-name }}.${{ steps.version.outputs.full_without_prefix }}.nupkg" -ApiKey ${{ secrets.GITHUB_TOKEN }} -source "https://nuget.pkg.github.com/${{ github.repository_owner }}" -skipduplicate
