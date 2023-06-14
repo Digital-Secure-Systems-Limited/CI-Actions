@@ -1,0 +1,52 @@
+name: 'Create packages'
+on:
+  workflow_call:
+    inputs:
+      project-name:  
+        description: 'csproj name'
+        required: true
+        type: string        
+jobs:
+
+  create:
+    runs-on: windows-2019
+    steps:
+      - uses: nowsprinting/check-version-format-action@v3
+        id: version
+        with:
+          prefix: 'v'
+          
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3.1
+        
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.1.1
+          
+      - name: Add Sources to NuGet
+        run: |
+          nuget sources add -source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -configfile ./nuget.config -name github_pipeline -username ${{  secrets.DSSL_USERNAME }} -password ${{ secrets.DSSL_TOKEN }} -StorePasswordInClearText
+          nuget sources add -source https://api.nuget.org/v3/index.json -configfile ./nuget.config -name nuget_pipeline
+      
+      - name: Navigate to Workspace
+        run: cd ${{ github.workspace }}
+
+      - name: Create Build Directory
+        run: mkdir _build
+                  
+      - name: Restore Packages
+        run: nuget restore ${{ inputs.project-name }}.sln
+        
+      - name: Build
+        run:  msbuild ${{ inputs.project-name }}.sln /nologo /nr:false /p:platform="Any CPU" /p:configuration="Release" /p:Version="${{ steps.version.outputs.full_without_prefix }}" -m
+        
+      - name: Pack
+        run: nuget pack ${{ inputs.project-name }}.vbproj -Version ${{ steps.version.outputs.full_without_prefix }} -Properties Configuration=Release
+        
+      - name: Publish
+        run: nuget push "**/*.nupkg" -ApiKey ${{ secrets.GITHUB_TOKEN }} -source "https://nuget.pkg.github.com/${{ github.repository_owner }}" -skipduplicate
+
+   
+        
