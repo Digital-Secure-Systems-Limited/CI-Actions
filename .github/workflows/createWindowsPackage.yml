@@ -2,10 +2,14 @@ name: 'Create packages'
 on:
   workflow_call:
     inputs:
+      solution-name:  
+        description: 'sln name'
+        required: true
+        type: string     
       project-name:  
         description: 'csproj name'
         required: true
-        type: string        
+        type: string      
 jobs:
 
   create:
@@ -37,10 +41,10 @@ jobs:
         run: mkdir _build
                   
       - name: Restore Packages
-        run: nuget restore ${{ inputs.project-name }}.sln
+        run: nuget restore ${{ inputs.solution-name }}.sln
         
       - name: Build
-        run:  msbuild ${{ inputs.project-name }}.sln /nologo /nr:false /p:platform="Any CPU" /p:configuration="Release" /p:Version="${{ steps.version.outputs.full_without_prefix }}" -m
+        run:  msbuild ${{ inputs.solution-name }}.sln /nologo /nr:false /p:platform="Any CPU" /p:configuration="Release" /p:Version="${{ steps.version.outputs.full_without_prefix }}" -m
         
       - name: Pack
         run: nuget pack ${{ inputs.project-name }}.vbproj -Version ${{ steps.version.outputs.full_without_prefix }} -Properties Configuration=Release
