@@ -51,7 +51,7 @@ jobs:
         run: nuget pack ${{ inputs.project-name }}.vbproj -Version ${{ steps.version.outputs.full_without_prefix }} -Properties Configuration=Release
         
       - name: Publish
-        run: nuget push "**/${{ inputs.package-name }}.${{ steps.version.outputs.full_without_prefix }}.nupkg" -ApiKey ${{ secrets.GITHUB_TOKEN }} -source "https://nuget.pkg.github.com/${{ github.repository_owner }}" -skipduplicate
+        run: nuget push "**/*.${{ steps.version.outputs.full_without_prefix }}.nupkg" -ApiKey ${{ secrets.GITHUB_TOKEN }} -source "https://nuget.pkg.github.com/${{ github.repository_owner }}" -skipduplicate
 
    
         
