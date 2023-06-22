@@ -14,7 +14,12 @@ on:
       project-name:  
         description: 'csproj name'
         required: true
-        type: string        
+        type: string    
+      product-name:  
+        description: 'folder to store the zip'
+        required: false
+        type: string   
+        default: dc-web
 jobs:
   build:
     runs-on: windows-2019
@@ -71,7 +76,7 @@ jobs:
           space_name: ${{ secrets.DO_SPACE_NAME }}
           space_region: ${{ secrets.DO_SPACE_REGION }}
           source: ${{ inputs.zip-name }}.zip
-          out_dir: dc-web/${{ steps.version.outputs.full_without_prefix }}
+          out_dir: ${{ inputs.product-name }}/${{ steps.version.outputs.full_without_prefix }}
       
       - name: Upload to beta
         uses: BetaHuhn/do-spaces-action@v2
@@ -82,5 +87,5 @@ jobs:
           space_name: ${{ secrets.DO_SPACE_NAME }}
           space_region: ${{ secrets.DO_SPACE_REGION }}
           source: ${{ inputs.zip-name }}.zip
-          out_dir: dc-web-beta/${{ steps.version.outputs.full_without_prefix }}
+          out_dir:  ${{ inputs.product-name }}-beta/${{ steps.version.outputs.full_without_prefix }}
 
