@@ -137,6 +137,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
+          provenance: false
           file: ${{ inputs.projectPath }}/${{ inputs.dockerfile }}
           push: ${{ inputs.event-name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
