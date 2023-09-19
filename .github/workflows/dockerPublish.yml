@@ -55,16 +55,16 @@ jobs:
         with:
           prefix: 'v'
 
-      - name: Set live docker details
-        if: steps.version.outputs.is_stable == 'true'
-        run: |
-          echo "DOCKER_REGISTRY=registry.digitalocean.com" >> $GITHUB_ENV
-          echo "DOCKER_USERNAME=${{ secrets.DO_DOCKER_USERNAME }}" >> $GITHUB_ENV
-          echo "DOCKER_PASSWORD=${{ secrets.DO_DOCKER_PASSWORD }}" >> $GITHUB_ENV
-          echo "DOCKER_REGISTRY_USER=dcweb-live" >> $GITHUB_ENV
+      #- name: Set live docker details
+      #  if: steps.version.outputs.is_stable == 'true'
+      #  run: |
+      #    echo "DOCKER_REGISTRY=registry.digitalocean.com" >> $GITHUB_ENV
+      #    echo "DOCKER_USERNAME=${{ secrets.DO_DOCKER_USERNAME }}" >> $GITHUB_ENV
+      #    echo "DOCKER_PASSWORD=${{ secrets.DO_DOCKER_PASSWORD }}" >> $GITHUB_ENV
+      #    echo "DOCKER_REGISTRY_USER=dcweb-live" >> $GITHUB_ENV
           
-      - name: Set beta docker details
-        if: steps.version.outputs.is_stable == 'false'
+      - name: Set docker details
+        #if: steps.version.outputs.is_stable == 'false'
         run: |
           echo "DOCKER_REGISTRY=ghcr.io" >> $GITHUB_ENV
           echo "DOCKER_USERNAME=${{ secrets.DSSL_USERNAME }}" >> $GITHUB_ENV
