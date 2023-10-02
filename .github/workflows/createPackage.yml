@@ -13,6 +13,10 @@ on:
       ref-cache-key:  
         description: 'cache-key'
         required: true
+        type: string        
+      projectFile:  
+        description: 'project file'
+        required: false
         type: string
 jobs:
   variables:
@@ -46,7 +50,7 @@ jobs:
           echo "package_names=$packages" >> $GITHUB_OUTPUT
           
       - name: Restore dependencies
-        run: dotnet restore --no-cache --force
+        run: dotnet restore ${{ inputs.projectFile }} --no-cache --force
       
       - uses: nowsprinting/check-version-format-action@v3
         id: version
@@ -57,10 +61,10 @@ jobs:
         run: sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' ${{ github.workspace }}/src/*/*.csproj   
           
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build ${{ inputs.projectFile }} --no-restore
                
       - name: Create package
-        run: dotnet pack -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg --configuration Release
+        run: dotnet pack ${{ inputs.projectFile }} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg --configuration Release
          
       - name: Delete release packages
         uses: Digital-Secure-Systems-Limited/CI-Actions-DeleteRepoPackageVersion@main
