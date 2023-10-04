@@ -18,6 +18,11 @@ on:
         description: 'project folder'
         required: true
         type: string
+      node:  
+        description: 'install node'
+        required: false
+        type: boolean
+        default: false
      
 env:
     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -41,8 +46,10 @@ jobs:
         # Optional extra command arguments the the SonarScanner 'begin' command
         dotnetBuildArguments: ${{ inputs.projectFile }}
         dotnetPreBuildCmd: |
-          curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
-          apt-get install -y nodejs
+          if [ ${{ inputs.node }} ]; then          
+            curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
+            apt-get install -y nodejs         
+          fi
           dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --configfile ./nuget.config --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
         dotnetTestArguments: ${{ inputs.projectFile }} --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         sonarBeginArguments: /d:sonar.inclusions="**/${{ inputs.projectFolder }}/**/*" /d:sonar.exclusions="**/Migrations/**/*,**/wwwroot/**/*,**/*Module.cs,**/*.xml,**/*.lic" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
