@@ -36,7 +36,20 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.x
+
+    - name: Add private GitHub registry to NuGet
+      run: |
+        dotnet nuget remove source github_pipeline
+        dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
+          
+    - name: Restore NuGet packages
+      run: dotnet restore
+     
     - name: SonarScanner for .NET 6 with pull request decoration support
       uses: highbyte/sonarscan-dotnet@v2.2.4
       with:
