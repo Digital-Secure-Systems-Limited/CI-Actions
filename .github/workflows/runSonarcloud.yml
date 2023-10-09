@@ -44,7 +44,7 @@ jobs:
 
     - uses: actions/cache@v3
       with:
-        path: ./.nuget/packages
+        path: .nuget/packages
         key: ${{ runner.os }}-nuget-${{ github.workflow }}
         restore-keys: |
           ${{ runner.os }}-nuget
