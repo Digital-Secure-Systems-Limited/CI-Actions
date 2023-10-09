@@ -30,7 +30,7 @@ env:
 
 jobs:
   analyze:
-    timeout-minutes: 10
+    timeout-minutes: 15
     name: Analyze
     runs-on: large-runner
     steps:
