@@ -57,7 +57,7 @@ jobs:
         sonarOrganization: dssl
         # Optional command arguments to dotnet test
         # Optional extra command arguments the the SonarScanner 'begin' command
-        dotnetBuildArguments: ${{ inputs.projectFile }} --source .nuget/packages 
+        dotnetBuildArguments: ${{ inputs.projectFile }} --source .nuget/packages --no-restore
         dotnetDisableTests: ${{ inputs.testProjectFile == ''}} 
         dotnetTestArguments: ${{ inputs.testProjectFile }} --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         sonarBeginArguments: /d:sonar.sources="**/src/" /d:sonar.tests="**/test/" /d:sonar.test.inclusion="**/test/**/*" /d:sonar.inclusions="**/${{ inputs.projectFolder }}/**/*" /d:sonar.exclusions="**/Migrations/**/*,**/wwwroot/**/*,**/*Module.cs,**/*.xml,**/*.lic" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
