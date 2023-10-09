@@ -1,0 +1,16 @@
+name: "HUB"
+on:
+  workflow_call:
+    inputs:
+      name:  
+        description: 'Name of the hub'
+        required: true
+        type: string
+
+jobs:
+  hub:    
+    name:  ${{ inputs.name }} Hub
+    runs-on: self-hosted
+    steps:    
+      - name: "Starting ${{ inputs.name }} Hub"
+        run: echo "Starting"
