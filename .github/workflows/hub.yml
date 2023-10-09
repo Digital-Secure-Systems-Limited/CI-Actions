@@ -10,7 +10,7 @@ on:
 jobs:
   hub:    
     name:  ${{ inputs.name }} Hub
-    runs-on: self-hosted
+    runs-on: large-runner
     steps:    
       - name: "Starting ${{ inputs.name }} Hub"
         run: echo "Starting"
