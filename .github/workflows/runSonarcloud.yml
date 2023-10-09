@@ -60,6 +60,7 @@ jobs:
         dotnetBuildArguments: ${{ inputs.projectFile }}
         dotnetPreBuildCmd: |
           dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --configfile ./nuget.config --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
+          dotnet restore --packages ${{ GITHUB_WORKSPACE }}/.nuget/packages 
         dotnetDisableTests: ${{ inputs.testProjectFile == ''}} 
         dotnetTestArguments: ${{ inputs.testProjectFile }} --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         sonarBeginArguments: /d:sonar.sources="**/src/" /d:sonar.tests="**/test/" /d:sonar.test.inclusion="**/test/**/*" /d:sonar.inclusions="**/${{ inputs.projectFolder }}/**/*" /d:sonar.exclusions="**/Migrations/**/*,**/wwwroot/**/*,**/*Module.cs,**/*.xml,**/*.lic" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
