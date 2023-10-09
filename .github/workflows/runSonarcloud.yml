@@ -32,7 +32,7 @@ jobs:
   analyze:
     timeout-minutes: 10
     name: Analyze
-    runs-on: self-hosted
+    runs-on: large-runner
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
