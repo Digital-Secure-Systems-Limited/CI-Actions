@@ -30,7 +30,7 @@ env:
 
 jobs:
   analyze:
-    timeout-minutes: 15
+    timeout-minutes: 10
     name: Analyze
     runs-on: self-hosted
     steps:
