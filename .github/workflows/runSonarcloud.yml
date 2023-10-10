@@ -49,7 +49,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget
      
-    - name: SonarScanner for .NET 6 with pull request decoration support
+    - name: SonarScanner
       uses: highbyte/sonarscan-dotnet@v2.2.4
       with:
         sonarProjectKey: ${{ inputs.sonarProjectKey }} 
