@@ -59,6 +59,6 @@ jobs:
         # Optional extra command arguments the the SonarScanner 'begin' command
         dotnetBuildArguments: ${{ inputs.projectFile }} --source .nuget/packages
         dotnetDisableTests: ${{ inputs.testProjectFile == ''}} 
-        dotnetTestArguments: ${{ inputs.testProjectFile }} --verbosity detailed --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        dotnetTestArguments: ${{ inputs.testProjectFile }} --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         sonarBeginArguments: /d:sonar.src="/github/workspace/src" /d:sonar.test="/test" /d:sonar.projectBaseDir="/github/workspace/src/${{ inputs.projectFolder }}" /d:sonar.exclusions="*/Migrations/**/*,**/wwwroot/**/*,**/*Module.cs,**/*.xml,**/*.lic" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
 
