@@ -37,25 +37,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Setup .NET
-      if: ${{ inputs.testProjectFile != ''}} 
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.x 
-
-    - name: Add NuGet package source
-      if: ${{ inputs.testProjectFile != ''}} 
-      uses: deitry/add-nuget-source-action@v1.0.1
-      with:
-        url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
-        username: ${{  secrets.DSSL_USERNAME }}
-        password: ${{  secrets.DSSL_TOKEN }}
-
-    - name: Tests
-      if: ${{ inputs.testProjectFile != ''}} 
-      run: |
-        dotnet test ${{ inputs.testProjectFile }} --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-    
     - name: SonarScanner
       uses: highbyte/sonarscan-dotnet@v2.2.4
       with:
@@ -65,7 +46,7 @@ jobs:
         dotnetBuildArguments: ${{ inputs.projectFile }}
         dotnetPreBuildCmd: |
           dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --configfile ./nuget.config --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
-        dotnetDisableTests: true #${{ inputs.testProjectFile == ''}} 
-        dotnetTestArguments: ${{ inputs.testProjectFile }} --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        dotnetDisableTests: ${{ inputs.testProjectFile == ''}} 
+        dotnetTestArguments: ${{ inputs.testProjectFile }} --logger trx --configuration Release     --no-restore     --no-build     --verbosity=minimal     -p:CollectCoverage=true     -p:CoverletOutputFormat="opencover" 
         sonarBeginArguments: /d:sonar.src="/github/workspace/src" /d:sonar.test="/test" /d:sonar.projectBaseDir="/github/workspace/src/${{ inputs.projectFolder }}" /d:sonar.exclusions="*/Migrations/**/*,**/wwwroot/**/*,**/*Module.cs,**/*.xml,**/*.lic" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
 
