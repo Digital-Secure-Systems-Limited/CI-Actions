@@ -58,7 +58,9 @@ jobs:
           prefix: 'v'
           
       - name: Set version number
-        run: sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' ${{ github.workspace }}/src/*/*.csproj   
+        run: |
+          sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' ${{ github.workspace }}/src/*/*.csproj   
+          sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' ${{ github.workspace }}/common.props   
           
       - name: Build
         run: dotnet build ${{ inputs.projectFile }} --no-restore --configuration Release
