@@ -122,7 +122,6 @@ jobs:
         if: inputs.skip-version == false
         run: |
           sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.meta.outputs.version }}<\/Version>/' ${{ inputs.projectPath }}/*.csproj
-          sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.meta.outputs.version }}<\/Version>/' common.props
 
       - name: add private GitHub registry to NuGet
         if: inputs.skip-version == false
