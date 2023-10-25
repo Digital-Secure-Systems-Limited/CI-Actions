@@ -23,11 +23,7 @@ on:
         description: 'project folder'
         required: true
         type: string
-      versionNumber:  
-        description: 'version number'
-        required: true
-        type: string
-     
+        
 env:
     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,6 +37,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Get version
+      id: package_version
+      uses: KageKirin/get-csproj-version@v0
+      with:
+        file: common.props
+
     - name: SonarScanner
       uses: highbyte/sonarscan-dotnet@v2.2.4
       with:
@@ -53,5 +55,5 @@ jobs:
           dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --configfile ./nuget.config --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
         dotnetDisableTests: ${{ inputs.testProjectFile == ''}} 
         dotnetTestArguments: ${{ inputs.testProjectFile }}   --logger trx   --verbosity=m  /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='./TestResults/'  /p:Include="[${{ inputs.projectFolder }}]*"
-        sonarBeginArguments: /d:sonar.src="/github/workspace/src" /d:sonar.projectVersion=${{ inputs.versionNumber }} /d:sonar.test="/github/workspace/test" /d:sonar.projectBaseDir="/github/workspace/src/${{ inputs.projectFolder }}" /d:sonar.exclusions="**/Migrations/**/*,**/wwwroot/**/*,**/*Module.cs,**/*.xml,**/*.lic,**/*AppSettings.cs,**/*Extensions.cs,**/*Exception.cs" /d:sonar.cs.opencover.reportsPaths="/github/workspace/test/${{ inputs.projectFolder }}.Tests/TestResults/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+        sonarBeginArguments: /d:sonar.src="/github/workspace/src" /d:sonar.projectVersion=${{ steps.test.package_version.version }} /d:sonar.test="/github/workspace/test" /d:sonar.projectBaseDir="/github/workspace/src/${{ inputs.projectFolder }}" /d:sonar.exclusions="**/Migrations/**/*,**/wwwroot/**/*,**/*Module.cs,**/*.xml,**/*.lic,**/*AppSettings.cs,**/*Extensions.cs,**/*Exception.cs" /d:sonar.cs.opencover.reportsPaths="/github/workspace/test/${{ inputs.projectFolder }}.Tests/TestResults/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
 
