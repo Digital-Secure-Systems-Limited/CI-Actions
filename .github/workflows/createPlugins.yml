@@ -12,7 +12,11 @@ on:
       additional_files:
         description: Supporting assemblies that needs to be included in the output
         type: string
+        required: false      
+      projectFile:  
+        description: 'project file'
         required: false
+        type: string
         
 jobs:
   build:
@@ -35,16 +39,19 @@ jobs:
     - name: Add Sources to NuGet
       run: |
         dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github_pipeline --username ${{  secrets.DSSL_USERNAME }} --password ${{  secrets.DSSL_TOKEN }}  --store-password-in-clear-text
-       
-    - name: Find csproj file and publish them
+    
+    - name: Set version number
       run: |
-        csproj=$(find src/plugins -iname "*${{ inputs.plugin_name }}.csproj")
-        sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' $csproj
-        project_name=$(basename "$csproj" .csproj)
+        sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' ${{ github.workspace }}/src/*/*.csproj   
+        sed -i 's/<Version>\(.*\)<\/Version>/<Version>${{ steps.version.outputs.full_without_prefix }}<\/Version>/' ${{ github.workspace }}/common.props   
+          
+    - name: Find csproj file and publish them
+      run: |        
         mkdir -p "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         mkdir -p "output/${{ inputs.plugin_name }}"
-        dotnet publish "$csproj" -o "output/${{ inputs.plugin_name }}"
+        dotnet publish  ${{ inputs.projectFile }} -o "output/${{ inputs.plugin_name }}"
         ls -R output/${{ inputs.plugin_name }}
+        project_name =  ${{ inputs.projectFile }} | sed -e "s/\.csproj//g"
         mv -n output/${{ inputs.plugin_name }}/$project_name.dll "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         IFS=',' read -ra files <<< "${{ inputs.additional_files }}"
         for file in "${files[@]}"; do
