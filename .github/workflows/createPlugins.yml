@@ -13,8 +13,8 @@ on:
         description: Supporting assemblies that needs to be included in the output
         type: string
         required: false      
-      projectFile:  
-        description: 'project file'
+      projectName:  
+        description: 'project namespace'
         required: false
         type: string
         
@@ -49,10 +49,9 @@ jobs:
       run: |        
         mkdir -p "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         mkdir -p "output/${{ inputs.plugin_name }}"
-        dotnet publish  ${{ inputs.projectFile }} -o "output/${{ inputs.plugin_name }}"
+        dotnet publish  src/${{ inputs.projectName }}/${{ inputs.projectName }}.csproj -o "output/${{ inputs.plugin_name }}"
         ls -R output/${{ inputs.plugin_name }}
-        project_name =  ${{ inputs.projectFile }} | sed -e "s/\.csproj//g"
-        mv -n output/${{ inputs.plugin_name }}/$project_name.dll "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
+        mv -n output/${{ inputs.plugin_name }}/${{ inputs.projectName }}.dll "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
         IFS=',' read -ra files <<< "${{ inputs.additional_files }}"
         for file in "${files[@]}"; do
             mv output/${{ inputs.plugin_name }}/$file.dll "${{ inputs.plugin_type }}/${{ inputs.plugin_name }}"
