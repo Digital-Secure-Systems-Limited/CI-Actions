@@ -10,7 +10,7 @@ on:
 jobs:
   hub:    
     name:  ${{ inputs.name }} Hub
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:    
       - name: "Starting ${{ inputs.name }} Hub"
         run: echo "Starting"
