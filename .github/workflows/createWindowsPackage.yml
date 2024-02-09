@@ -17,7 +17,7 @@ on:
 jobs:
 
   create:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - uses: nowsprinting/check-version-format-action@v3
         id: version
